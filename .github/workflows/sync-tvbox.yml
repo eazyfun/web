@@ -1,10 +1,9 @@
 name: Sync qist/tvbox to tvbox folder
 on:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '15 3 * * *' # UTC 03:17 = 北京时间 11:15
   workflow_dispatch:
 
-# ==========重点！这里直接定义权限，不用APP设置==========
 permissions:
   contents: write
 
