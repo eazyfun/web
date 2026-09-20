@@ -1,7 +1,8 @@
 name: Sync qist/tvbox to tvbox folder
 on:
   schedule:
-    - cron: '19 3 * * *' # UTC 03:17 = 北京时间 11:15
+    - cron: '0 12 * * *' # 北京12:00
+      timezone: Asia/Shanghai
   workflow_dispatch:
 
 permissions:
