@@ -1,11 +1,12 @@
 name: Sync qist/tvbox to tvbox folder
 on:
   schedule:
-    - cron: '0 0 * * *' # UTC 0点，北京时间早上8点自动同步
-  workflow_dispatch: # 可以手动点按钮立即同步
+    - cron: '0 0 * * *'
+  workflow_dispatch:
 
+# ==========重点！这里直接定义权限，不用APP设置==========
 permissions:
-  contents: write # 允许action提交文件到你的仓库
+  contents: write
 
 jobs:
   sync:
@@ -21,7 +22,7 @@ jobs:
           ref: master
           path: upstream
 
-      - name: 复制全部文件到 tvbox 子目录（不碰仓库原有任何文件！）
+      - name: 复制全部文件到 tvbox 子目录（不碰原有文件）
         run: |
           mkdir -p ./tvbox
           cp -r upstream/* ./tvbox/
