@@ -1,7 +1,7 @@
-name: Sync qist/tvbox to tvbox folder
+name: Sync qist/tvbox diff only
 on:
   schedule:
-    - cron: '0 12 * * *' # 北京12:00
+    - cron: '0 12 * * *'
       timezone: Asia/Shanghai
   workflow_dispatch:
 
@@ -12,26 +12,25 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - name: 检出你当前web仓库代码
+      - name: 拉取本仓库代码
         uses: actions/checkout@v4
 
-      - name: 拉取 qist/tvbox 上游源码
+      - name: 拉取上游仓库
         uses: actions/checkout@v4
         with:
           repository: qist/tvbox
           ref: master
           path: upstream
 
-      - name: 复制全部文件到 tvbox 子目录（不碰原有文件）
+      - name: 差异同步，仅拷贝新增/修改文件，跳过drpy.js，不删除本地文件
         run: |
           mkdir -p ./tvbox
-          cp -r upstream/* ./tvbox/
-          rm -rf upstream
+          # rsync：排除 js/drpy.js，只同步改动文件，不删除本地文件
+          rsync -av --exclude=js/drpy.js upstream/ ./tvbox/
 
-      - name: 提交更新
+      - name: 提交变更
         run: |
-          git config --global user.name "SyncBot"
-          git config --global user.email "sync@example.com"
           git add tvbox/
-          git commit -m "auto sync qist/tvbox latest" || echo "无变更无需提交"
+          # 只有文件发生变化才提交，无变更直接跳过
+          git commit -m "diff sync: update tvbox" || echo "文件无更新，跳过本次提交"
           git push
